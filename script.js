@@ -1,9 +1,26 @@
 // Initialize Matter.js modules
 const { Engine, Render, World, Bodies, Body, Mouse, Vector, Events } = Matter;
 
-// Create engine and world
-const engine = Engine.create();
+// Create engine and world with modified properties
+const engine = Engine.create({
+    enableSleeping: false,
+    constraintIterations: 4,
+    positionIterations: 6,
+    velocityIterations: 4
+});
+
+// Disable air friction
+engine.world.airFriction = 0;
+engine.world.gravity.scale = 0.001; // Adjust gravity scale for better control
+
 const world = engine.world;
+
+// Store the default gravity value (adjusted for scale)
+const DEFAULT_GRAVITY = 1;
+
+// Set initial gravity
+engine.world.gravity.y = DEFAULT_GRAVITY;
+engine.world.gravity.x = 0;
 
 // Setup canvas
 const canvas = document.getElementById('canvas');
@@ -51,8 +68,10 @@ const createShape = (type) => {
     let shape;
 
     const commonProperties = {
-        restitution: 0.7,
-        friction: 0.3,
+        restitution: 0.8,    // Increased bounciness
+        friction: 0.2,       // Reduced surface friction
+        frictionAir: 0,      // No air friction
+        frictionStatic: 0,   // No static friction
         render: {
             fillStyle: '#FFFFFF'
         }
@@ -140,9 +159,9 @@ plusIcon.addEventListener('click', () => {
     shapeMenu.classList.toggle('hidden');
 });
 
-document.querySelectorAll('#shape-menu button').forEach(button => {
-    button.addEventListener('click', (e) => {
-        const shapeType = e.target.getAttribute('data-shape');
+document.querySelectorAll('.shape-option').forEach(option => {
+    option.addEventListener('click', (e) => {
+        const shapeType = e.currentTarget.getAttribute('data-shape');
         createShape(shapeType);
         shapeMenu.classList.add('hidden');
     });
@@ -154,6 +173,20 @@ window.addEventListener('resize', () => {
     render.canvas.height = window.innerHeight;
     render.options.width = window.innerWidth;
     render.options.height = window.innerHeight;
+});
+
+// Add after engine creation
+let gravityEnabled = true;
+
+// Update the gravity toggle functionality
+const gravityToggle = document.getElementById('gravity-toggle');
+
+gravityToggle.addEventListener('click', () => {
+    gravityEnabled = !gravityEnabled;
+    gravityToggle.classList.toggle('disabled');
+    
+    // Simply toggle the gravity value without affecting velocities
+    engine.world.gravity.y = gravityEnabled ? DEFAULT_GRAVITY : 0;
 });
 
 // Start the engine and renderer

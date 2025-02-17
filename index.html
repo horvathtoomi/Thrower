@@ -11,12 +11,39 @@
     <div id="plus-menu">
         <div id="plus-icon">+</div>
         <div id="shape-menu" class="hidden">
-            <button data-shape="circle">Circle</button>
-            <button data-shape="square">Square</button>
-            <button data-shape="triangle">Triangle</button>
-            <button data-shape="rectangle">Rectangle</button>
-            <button data-shape="pentagon">Pentagon</button>
+            <div class="shape-option" data-shape="circle">
+                <svg viewBox="0 0 40 40">
+                    <circle cx="20" cy="20" r="15"/>
+                </svg>
+            </div>
+            <div class="shape-option" data-shape="square">
+                <svg viewBox="0 0 40 40">
+                    <rect x="5" y="5" width="30" height="30"/>
+                </svg>
+            </div>
+            <div class="shape-option" data-shape="triangle">
+                <svg viewBox="0 0 40 40">
+                    <polygon points="20,5 35,35 5,35"/>
+                </svg>
+            </div>
+            <div class="shape-option" data-shape="rectangle">
+                <svg viewBox="0 0 40 40">
+                    <rect x="5" y="10" width="30" height="20"/>
+                </svg>
+            </div>
+            <div class="shape-option" data-shape="pentagon">
+                <svg viewBox="0 0 40 40">
+                    <polygon points="20,5 35,15 30,35 10,35 5,15"/>
+                </svg>
+            </div>
         </div>
+    </div>
+    <div id="gravity-toggle">
+        <svg viewBox="0 0 40 40">
+            <circle cx="20" cy="20" r="15" class="orbit-circle"/>
+            <circle cx="20" cy="20" r="5" class="center-circle"/>
+            <circle cx="20" cy="5" r="3" class="orbiting-circle"/>
+        </svg>
     </div>
     <canvas id="canvas"></canvas>
     <script src="script.js"></script>
