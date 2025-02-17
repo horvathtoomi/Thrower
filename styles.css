@@ -1,0 +1,67 @@
+body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: black;
+}
+
+#canvas {
+    width: 100vw;
+    height: 100vh;
+    display: block;
+}
+
+#plus-menu {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+}
+
+#plus-icon {
+    width: 40px;
+    height: 40px;
+    background: #666;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: black;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+#plus-icon:hover {
+    background: #777;
+}
+
+#shape-menu {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 5px;
+    padding: 10px;
+}
+
+#shape-menu button {
+    display: block;
+    width: 100%;
+    padding: 8px 15px;
+    margin: 5px 0;
+    border: none;
+    background: #333;
+    color: white;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+#shape-menu button:hover {
+    background: #444;
+}
+
+.hidden {
+    display: none;
+} 
