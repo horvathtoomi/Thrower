@@ -9,18 +9,18 @@ const engine = Engine.create({
     velocityIterations: 4
 });
 
-// Disable air friction
-engine.world.airFriction = 0;
-engine.world.gravity.scale = 0.001; // Adjust gravity scale for better control
-
-const world = engine.world;
-
-// Store the default gravity value (adjusted for scale)
-const DEFAULT_GRAVITY = 1;
+// Constants for gravity
+const GRAVITY_VALUE = 0.5; // Increased from 0.001 to 0.003 for stronger gravity
 
 // Set initial gravity
-engine.world.gravity.y = DEFAULT_GRAVITY;
+engine.world.gravity.y = GRAVITY_VALUE;
 engine.world.gravity.x = 0;
+let gravityEnabled = true;
+
+// Disable air friction
+engine.world.airFriction = 0;
+
+const world = engine.world;
 
 // Setup canvas
 const canvas = document.getElementById('canvas');
@@ -49,7 +49,6 @@ World.add(world, walls);
 let mousePos = { x: 0, y: 0 };
 let lastMousePos = { x: 0, y: 0 };
 let mouseVelocity = { x: 0, y: 0 };
-const forceMultiplier = 0.05; // Adjust this to control force strength
 
 // Track mouse movement
 document.addEventListener('mousemove', (e) => {
@@ -135,9 +134,19 @@ function keepShapesInBounds() {
     });
 }
 
+// Simple gravity toggle functionality
+const gravityToggle = document.getElementById('gravity-toggle');
+
+gravityToggle.addEventListener('click', () => {
+    gravityEnabled = !gravityEnabled;
+    gravityToggle.classList.toggle('disabled');
+    engine.world.gravity.y = gravityEnabled ? GRAVITY_VALUE : 0;
+});
+
 // Update physics based on mouse movement
 Events.on(engine, 'beforeUpdate', () => {
     const bodies = world.bodies.filter(body => !body.isStatic);
+    const forceMultiplier = 0.05; // Constant force multiplier
     
     bodies.forEach(body => {
         if (isMouseNearBody(body)) {
@@ -167,26 +176,65 @@ document.querySelectorAll('.shape-option').forEach(option => {
     });
 });
 
+// Update the more button functionality
+const moreButton = document.getElementById('more-button');
+const moreMenu = document.getElementById('more-menu');
+const moreIcon = moreButton.querySelector('.more-icon');
+
+moreButton.addEventListener('click', (e) => {
+    e.stopPropagation();
+    moreButton.classList.toggle('expanded');
+    moreMenu.classList.toggle('hidden');
+    moreIcon.textContent = moreButton.classList.contains('expanded') ? '^' : 'ˇ';
+});
+
+// Update the document click handler
+document.addEventListener('click', (e) => {
+    if (!plusIcon.contains(e.target)) {
+        shapeMenu.classList.add('hidden');
+        if (moreMenu) {
+            moreMenu.classList.add('hidden');
+            moreButton.classList.remove('expanded');
+            moreIcon.textContent = 'ˇ';
+        }
+    }
+});
+
+// Function to add new items to the more menu
+function addMoreMenuItem(id, label, callback) {
+    const item = document.createElement('div');
+    item.className = 'shape-option';
+    item.id = id;
+    
+    // You can customize the appearance of each item
+    item.innerHTML = `
+        <div class="more-item-content">
+            ${label}
+        </div>
+    `;
+    
+    item.addEventListener('click', (e) => {
+        e.stopPropagation();
+        callback();
+        shapeMenu.classList.add('hidden');
+        moreMenu.classList.add('hidden');
+        moreButton.classList.remove('expanded');
+    });
+    
+    moreMenu.appendChild(item);
+}
+
+// Example of how to add new items (you can add your own later)
+// addMoreMenuItem('special-shape', 'Special Shape', () => {
+//     // Add your special shape creation logic here
+// });
+
 // Handle window resize
 window.addEventListener('resize', () => {
     render.canvas.width = window.innerWidth;
     render.canvas.height = window.innerHeight;
     render.options.width = window.innerWidth;
     render.options.height = window.innerHeight;
-});
-
-// Add after engine creation
-let gravityEnabled = true;
-
-// Update the gravity toggle functionality
-const gravityToggle = document.getElementById('gravity-toggle');
-
-gravityToggle.addEventListener('click', () => {
-    gravityEnabled = !gravityEnabled;
-    gravityToggle.classList.toggle('disabled');
-    
-    // Simply toggle the gravity value without affecting velocities
-    engine.world.gravity.y = gravityEnabled ? DEFAULT_GRAVITY : 0;
 });
 
 // Start the engine and renderer
