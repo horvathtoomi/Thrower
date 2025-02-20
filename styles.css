@@ -264,4 +264,107 @@ body {
 
 #more-menu.hidden {
     display: none;
+}
+
+/* Add theme toggle button styles */
+#theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    width: 40px;
+    height: 40px;
+    background: #666;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+#theme-toggle:hover {
+    background: #777;
+    transform: scale(1.1);
+}
+
+#theme-toggle.theme-transition {
+    animation: themeSwitch 0.5s ease;
+}
+
+#theme-toggle svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: #000;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform 0.5s ease;
+}
+
+@keyframes themeSwitch {
+    0% {
+        transform: rotate(0deg) scale(1);
+    }
+    50% {
+        transform: rotate(180deg) scale(0.8);
+    }
+    100% {
+        transform: rotate(360deg) scale(1);
+    }
+}
+
+/* Theme-specific styles */
+body.light-theme {
+    background: white;
+}
+
+body.light-theme #plus-icon,
+body.light-theme #gravity-toggle,
+body.light-theme #theme-toggle {
+    background: #ddd;
+}
+
+body.light-theme #shape-menu {
+    background: #fff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+body.light-theme .shape-option {
+    background: #eee;
+}
+
+body.light-theme .shape-option:hover {
+    background: #ddd;
+}
+
+body.light-theme .shape-option svg {
+    fill: #000;
+}
+
+/* Icon visibility based on theme */
+body.light-theme .sun-icon {
+    transform: rotate(-180deg);
+    opacity: 0;
+}
+
+body.light-theme .moon-icon {
+    transform: rotate(0deg);
+    opacity: 1;
+}
+
+.sun-icon {
+    transform: rotate(0deg);
+    opacity: 1;
+}
+
+.moon-icon {
+    transform: rotate(180deg);
+    opacity: 0;
+}
+
+/* Update canvas color in light theme */
+body.light-theme #canvas {
+    background: white;
 } 

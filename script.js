@@ -60,6 +60,36 @@ document.addEventListener('mousemove', (e) => {
     };
 });
 
+// Add after the gravity toggle code
+const themeToggle = document.getElementById('theme-toggle');
+let isDarkTheme = true;
+
+themeToggle.addEventListener('click', () => {
+    isDarkTheme = !isDarkTheme;
+    document.body.classList.toggle('light-theme');
+    
+    // Add animation class
+    themeToggle.classList.add('theme-transition');
+    
+    // Remove animation class after animation completes
+    setTimeout(() => {
+        themeToggle.classList.remove('theme-transition');
+    }, 500);
+    
+    // Update canvas background
+    render.options.background = isDarkTheme ? '#000000' : '#FFFFFF';
+    
+    // Update shape colors
+    const bodies = world.bodies.filter(body => !body.isStatic);
+    bodies.forEach(body => {
+        if (body.render.fillStyle === '#FFFFFF') {
+            body.render.fillStyle = '#000000';
+        } else if (body.render.fillStyle === '#000000') {
+            body.render.fillStyle = '#FFFFFF';
+        }
+    });
+});
+
 // Shape creation functions
 const createShape = (type) => {
     const x = window.innerWidth / 2;
@@ -67,12 +97,12 @@ const createShape = (type) => {
     let shape;
 
     const commonProperties = {
-        restitution: 0.8,    // Increased bounciness
-        friction: 0.2,       // Reduced surface friction
-        frictionAir: 0,      // No air friction
-        frictionStatic: 0,   // No static friction
+        restitution: 0.8,
+        friction: 0.2,
+        frictionAir: 0,
+        frictionStatic: 0,
         render: {
-            fillStyle: '#FFFFFF'
+            fillStyle: isDarkTheme ? '#FFFFFF' : '#000000'
         }
     };
 
@@ -146,7 +176,7 @@ gravityToggle.addEventListener('click', () => {
 // Update physics based on mouse movement
 Events.on(engine, 'beforeUpdate', () => {
     const bodies = world.bodies.filter(body => !body.isStatic);
-    const forceMultiplier = 0.05; // Constant force multiplier
+    const forceMultiplier = 0.05;
     
     bodies.forEach(body => {
         if (isMouseNearBody(body)) {
